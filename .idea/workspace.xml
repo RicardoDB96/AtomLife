@@ -4,21 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6a31e9d2-eb1f-4a1d-8272-5093409445c2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AtomLife.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DAO/DoctoresCRUD.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DAO/PacientesCRUD.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/entidades/Doctor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/entidades/Paciente.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/entidades/Persona.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ventanaMain.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ventanaMain.java" afterDir="false" />
+    <list default="true" id="6a31e9d2-eb1f-4a1d-8272-5093409445c2" name="Changes" comment="Se hizo la primera versión del sistema">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DAO/DoctoresCRUD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/DoctoresCRUD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DAO/PacientesCRUD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/PacientesCRUD.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,6 +64,19 @@
       <option name="presentableId" value="Default" />
       <updated>1700705125556</updated>
     </task>
+    <task id="LOCAL-00001" summary="Se hizo la primera versión del sistema">
+      <option name="closed" value="true" />
+      <created>1700962903086</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1700962903086</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Se hizo la primera versión del sistema" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se hizo la primera versión del sistema" />
   </component>
 </project>

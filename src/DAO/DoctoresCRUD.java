@@ -32,28 +32,14 @@ public class DoctoresCRUD {
         }
     }
 
-    /**
-     * Método para ingresar un Doctor al sistema
-     *
-     * @param d Doctor a ingresar al sistema
-     */
-    public void insertarDoctor(Doctor d) {
-        crearArchivo();
+    private ArrayList<Doctor> leerArchivo() {
         try {
             FileInputStream leer = new FileInputStream(filepath);
             System.out.println(leer.available());
-            ObjectInputStream miStream2 = new ObjectInputStream(leer);
-            Object o = miStream2.readObject();
-            ArrayList<Doctor> doctoresList = (ArrayList<Doctor>) o;
-
-            doctoresList.add(d); // Añadimos el doctor a la lista recuperada
-
-            // Escribimos la lista nueva sobre la lista anterior
-            FileOutputStream escribir = new FileOutputStream(filepath);
-            ObjectOutputStream miStream = new ObjectOutputStream(escribir);
-            miStream.writeObject(doctoresList);
+            ObjectInputStream miStream = new ObjectInputStream(leer);
+            Object o = miStream.readObject();
             miStream.close();
-            miStream2.close();
+            return (ArrayList<Doctor>) o;
         } catch (FileNotFoundException e) {
             System.out.println("Archivo no encontrado.");
         } catch (IOException e) {
@@ -61,6 +47,40 @@ public class DoctoresCRUD {
             System.out.println(e);
         } catch (ClassNotFoundException e) {
             System.out.println("Error al leer lista de clase Doctores");
+        }
+        return null;
+    }
+
+    private void escribirArchivo(ArrayList<Doctor> d) {
+        // Escribimos la lista nueva sobre la lista anterior
+        try {
+            FileOutputStream escribir = new FileOutputStream(filepath);
+            ObjectOutputStream miStream = new ObjectOutputStream(escribir);
+            miStream.writeObject(d);
+            miStream.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Archivo no encontrado.");
+        } catch (IOException e) {
+            System.out.println("Error de E/S");
+            System.out.println(e);
+        }
+    }
+
+    /**
+     * Método para ingresar un Doctor al sistema
+     *
+     * @param d Doctor a ingresar al sistema
+     */
+    public void insertarDoctor(Doctor d) {
+        crearArchivo();
+
+        ArrayList<Doctor> doctores = leerArchivo();
+
+        if (doctores != null) {
+            doctores.add(d);
+            escribirArchivo(doctores);
+        } else {
+            System.out.println("Error al intentar agregar un doctor");
         }
     }
 
@@ -73,28 +93,21 @@ public class DoctoresCRUD {
     public Doctor buscarDoctorPorID(long ID) {
         crearArchivo();
         // Obtener lista de doctores desde Archivo
-        try {
-            FileInputStream leer = new FileInputStream(filepath);
-            ObjectInputStream miStream2 = new ObjectInputStream(leer);
-            Object o = miStream2.readObject();
-            ArrayList<Doctor> doctoresList = (ArrayList<Doctor>) o;
+        ArrayList<Doctor> doctoresList = leerArchivo();
 
-            // Comprobamos si la lista contiene el ID del doctor que buscamos
-            for (Doctor d : doctoresList) {
-                if (d.getID() == ID) {
-                    return d;
-                }
-            }
-
-            // No se encontro un doctor con la ID ingresada
-            miStream2.close();
+        // Comprobamos si existe la lista
+        if (doctoresList == null) {
             return null;
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
         }
+
+        // Comprobamos si la lista contiene el ID del doctor que buscamos
+        for (Doctor d : doctoresList) {
+            if (d.getID() == ID) {
+                return d;
+            }
+        }
+
+        // No se encontro un doctor con la ID ingresada
+        return null;
     }
 }
