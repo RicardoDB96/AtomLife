@@ -32,7 +32,7 @@ public class DoctoresCRUD {
         }
     }
 
-    private ArrayList<Doctor> leerArchivo() {
+    public ArrayList<Doctor> leerArchivo() {
         try {
             FileInputStream leer = new FileInputStream(filepath);
             System.out.println(leer.available());

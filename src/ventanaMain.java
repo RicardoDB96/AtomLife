@@ -1,12 +1,16 @@
+import CustomList.CitasList;
+import DAO.CitasCRUD;
 import DAO.DoctoresCRUD;
 import DAO.PacientesCRUD;
+import entidades.Cita;
 import entidades.Doctor;
 import entidades.Paciente;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.awt.event.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class ventanaMain extends JFrame {
     private JTabbedPane tabbedPane1;
@@ -43,6 +47,10 @@ public class ventanaMain extends JFrame {
     private JComboBox cmbPacientes;
     private JTextField txtMotivo;
     private JButton btnAgregarCita;
+    private JTextField txtDoctorSeleccionado;
+    private JTextField txtPacienteSeleccionado;
+    private JScrollPane sPanel;
+    private JList<String> lCitas;
 
     /**
      * Metodo para validar si la ID ingresada es valida
@@ -76,6 +84,23 @@ public class ventanaMain extends JFrame {
     }
 
     /**
+     * Metodo para comprobar que la fecha ingresada es valida
+     *
+     * @param fecha a comprobar su validez
+     * @return boolean con la validez de la cita
+     */
+    public boolean validarFecha(String fecha) {
+        try { // Se prueba la fecha para comprobar si es valida
+            SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+            formatoFecha.setLenient(false);
+            Date miFecha = formatoFecha.parse(fecha);
+        } catch (Exception e) { // Si tenemos algun error con la fecha, retornamos falso
+            return false;
+        }
+        return true; // Retornamos verdadero si la fecha es valida
+    }
+
+    /**
      * Metodo para limpiar los datos en el formulario de Doctor
      */
     public void limpiarDatosDoctor() {
@@ -102,7 +127,22 @@ public class ventanaMain extends JFrame {
     }
 
     /**
-     * Metodo para crear un Doctor nuevo con los datos del formulario, ademas de validad si son correctos los datos
+     * Metodo para limpiar los datos en el formulario de Cita
+     */
+    public void limpiarDatosCita() {
+        cmbDia.setSelectedItem(null);
+        cmbMes.setSelectedItem(null);
+        cmbHora.setSelectedItem(null);
+        cmbMinuto.setSelectedItem(null);
+        txtMotivo.setText("");
+        cmbDoctores.setSelectedItem(null);
+        txtDoctorSeleccionado.setText("");
+        cmbPacientes.setSelectedItem(null);
+        txtPacienteSeleccionado.setText("");
+    }
+
+    /**
+     * Metodo para crear un Doctor nuevo con los datos del formulario, ademas de validar si son correctos los datos
      *
      * @return Doctor con los datos ingresados, si no retorna null
      */
@@ -128,7 +168,7 @@ public class ventanaMain extends JFrame {
     }
 
     /**
-     * Metodo para crear un Paciente nuevo con los datos del formulario, ademas de validad si son correctos los datos
+     * Metodo para crear un Paciente nuevo con los datos del formulario, ademas de validar si son correctos los datos
      *
      * @return Paciente con los datos ingresados, si no retorna null
      */
@@ -151,6 +191,42 @@ public class ventanaMain extends JFrame {
 
         // Retornamos el nuevo Paciente
         return p;
+    }
+
+    /**
+     * Metodo para crear una Cita medica nueva con los datos del formulario, ademas de validar si son correctos los datos
+     *
+     * @return Cita con los datos ingresados, si no retorna null
+     */
+    public Cita obtenerCita() {
+        // Checamos si hay datos que ingresar y si estos son validos
+        if (!validarDatosCitas()) {
+            return null;
+        }
+
+        Cita c = new Cita();
+
+        // Vamos creando la cita
+        c.setFecha(obtenerFecha());
+        c.setHora(obtenerHora());
+        c.setMotivo(txtMotivo.getText());
+        c.setDoctor(txtDoctorSeleccionado.getText());
+        c.setPaciente(txtPacienteSeleccionado.getText());
+
+        // Retonamos la nueva cita
+        return c;
+    }
+
+    private String obtenerFecha() {
+        try {
+            return cmbDia.getSelectedItem().toString() + "/" + cmbMes.getSelectedItem().toString() + "/" + cmbAnio.getSelectedItem().toString();
+        } catch (Exception e) {
+            return "00/00/000";
+        }
+    }
+
+    private String obtenerHora() {
+        return cmbHora.getSelectedItem().toString() + ":" + cmbMinuto.getSelectedItem().toString();
     }
 
     /**
@@ -234,20 +310,60 @@ public class ventanaMain extends JFrame {
     }
 
     /**
+     * Metodo para validar si se ingresaron los datos necesarios para crear una Cita médica
+     *
+     * @return Boolean con el valor si se tiene los datos para crear una CIta, ademas de que si alguno es incorrecto, se notifica
+     */
+    public boolean validarDatosCitas() {
+        // Se valida si algun dato esta vacio o no es valido
+        if (!validarFecha(obtenerFecha())) {
+            JOptionPane.showMessageDialog(miPanel, "Ingrese una fecha valida");
+            return false;
+        }
+        if (cmbHora.getSelectedItem() == null || cmbMinuto.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(miPanel, "Ingrese una hora para la cita médica");
+            return false;
+        }
+        if (txtMotivo.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(miPanel, "Ingrese un motivo para la cita médica");
+            return false;
+        }
+        if (txtDoctorSeleccionado.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(miPanel, "Ingrese un Doctor para la cita médica");
+            return false;
+        }
+        if (txtPacienteSeleccionado.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(miPanel, "Ingrese un Paciente para la cita médica");
+            return false;
+        }
+        // Si todos los datos tienen información y son validos, se considera correctos
+        return true;
+    }
+
+    /**
      * Metodo con las acciones a realizar al pulsar buscar doctor
-     * @param d Doctor que recuperamos al buscar
+     *
+     * @param d  Doctor que recuperamos al buscar
      * @param id ID con la que buscamos al doctor
      */
-    public void doctorRespuesta(Doctor d, Long id) {
+    public void doctorRespuesta(Doctor d, Long id, String tipoUsuario) {
         if (d == null) {
-            int respuesta = JOptionPane.showConfirmDialog(miPanel, "No se encuentra el doctor con la ID: " + id + "\n¿Desea dar de alta?", "Doctor", JOptionPane.YES_NO_OPTION);
-            if (respuesta == 0) {
-                // Se quiere dar de alta un nuevo Doctor
-                btnAgregarDoctor.setEnabled(true);
-                txtNombreDoctor.requestFocus();
+            if (!tipoUsuario.equals("usuario")) { // Se verifica si no es un usuario para realizar acciones importantes
+                int respuesta = JOptionPane.showConfirmDialog(miPanel, "No se encuentra el doctor con la ID: " + id + "\n¿Desea dar de alta?", "Doctor", JOptionPane.YES_NO_OPTION);
+                if (respuesta == 0) {
+                    // Se quiere dar de alta un nuevo Doctor
+                    btnAgregarDoctor.setEnabled(true);
+                    txtNombreDoctor.requestFocus();
+                    limpiarDatosDoctor();
+                    txtIDDoctor.setText(String.valueOf(id));
+                    txtIDDoctor.setEnabled(false);
 
-            } else if (respuesta == 1) {
-                // No se quiere dar de alta un nuevo Doctor, se limpia el formulario
+                } else if (respuesta == 1) {
+                    // No se quiere dar de alta un nuevo Doctor, se limpia el formulario
+                    limpiarDatosDoctor();
+                }
+            } else {
+                JOptionPane.showMessageDialog(miPanel, "No se encuentra el doctor con la ID: " + id);
                 limpiarDatosDoctor();
             }
         } else {
@@ -262,19 +378,27 @@ public class ventanaMain extends JFrame {
 
     /**
      * Metodo con las acciones a realizar al pulsar buscar paciente
-     * @param p Paciente que recuperamos al buscar
+     *
+     * @param p  Paciente que recuperamos al buscar
      * @param id ID con la que buscamos al paciente
      */
-    public void pacienteRespuesta(Paciente p, Long id) {
+    public void pacienteRespuesta(Paciente p, Long id, String tipoUsuario) {
         if (p == null) {
-            int respuesta = JOptionPane.showConfirmDialog(miPanel, "No se encuentra al paciente con la ID: " + id + "\n¿Desea dar de alta?", "Paciente", JOptionPane.YES_NO_OPTION);
-            if (respuesta == 0) {
-                // Se quiere dar de alta un nuevo Doctor
-                btnAgregarPaciente.setEnabled(true);
-                txtNombrePaciente.requestFocus();
-
-            } else if (respuesta == 1) {
-                // No se quiere dar de alta un nuevo Doctor, se limpia el formulario
+            if (!tipoUsuario.equals("usuario")) { // Se verifica si no es un usuario para realizar acciones importantes
+                int respuesta = JOptionPane.showConfirmDialog(miPanel, "No se encuentra al paciente con la ID: " + id + "\n¿Desea dar de alta?", "Paciente", JOptionPane.YES_NO_OPTION);
+                if (respuesta == 0) {
+                    // Se quiere dar de alta un nuevo Doctor
+                    btnAgregarPaciente.setEnabled(true);
+                    txtNombrePaciente.requestFocus();
+                    limpiarDatosPaciente();
+                    txtIDPaciente.setText(String.valueOf(id));
+                    txtIDPaciente.setEnabled(false);
+                } else if (respuesta == 1) {
+                    // No se quiere dar de alta un nuevo Doctor, se limpia el formulario
+                    limpiarDatosPaciente();
+                }
+            } else {
+                JOptionPane.showMessageDialog(miPanel, "No se encuentra al paciente con la ID: " + id);
                 limpiarDatosPaciente();
             }
         } else {
@@ -287,11 +411,37 @@ public class ventanaMain extends JFrame {
         }
     }
 
-    public ventanaMain() {
+    public void rellenarDoctoresCmb() {
+        cmbDoctores.removeAllItems();
+        DoctoresCRUD dCRUD = new DoctoresCRUD();
+        ArrayList<Doctor> doctoresList = dCRUD.leerArchivo();
+        if (doctoresList != null) {
+            for (Doctor d : doctoresList) {
+                cmbDoctores.addItem(d.getID());
+            }
+        }
+    }
+
+    public void rellenarPacientesCmb() {
+        cmbPacientes.removeAllItems();
+        PacientesCRUD pCRUD = new PacientesCRUD();
+        ArrayList<Paciente> pacientesList = pCRUD.leerArchivo();
+        if (pacientesList != null) {
+            for (Paciente p : pacientesList) {
+                cmbPacientes.addItem(p.getID());
+            }
+        }
+    }
+
+    public ventanaMain(String tipoUsuario) {
 
         // Ponemos los ComboBox en null para manejar un poco mejor el manejo de validación de datos
         cmbGeneroDoctor.setSelectedItem(null);
         cmbGeneroPaciente.setSelectedItem(null);
+        cmbDia.setSelectedItem(null);
+        cmbMes.setSelectedItem(null);
+        cmbHora.setSelectedItem(null);
+        cmbMinuto.setSelectedItem(null);
 
         // Acciones de Doctor
         btnBuscarDoctor.addActionListener(new ActionListener() {
@@ -303,7 +453,7 @@ public class ventanaMain extends JFrame {
                 if (resultado) {
                     long id = Long.parseLong(txtIDDoctor.getText());
                     Doctor doctor = crud.buscarDoctorPorID(id);
-                    doctorRespuesta(doctor, id);
+                    doctorRespuesta(doctor, id, tipoUsuario);
                 } else {
                     JOptionPane.showMessageDialog(miPanel, "Error en la ID, ingrese solo numeros");
                     txtIDDoctor.requestFocus();
@@ -320,6 +470,7 @@ public class ventanaMain extends JFrame {
                     JOptionPane.showMessageDialog(miPanel, "Doctor ingresado exitosamente");
                     limpiarDatosDoctor();
                     btnAgregarDoctor.setEnabled(false);
+                    txtIDDoctor.setEnabled(true);
                 }
             }
         });
@@ -334,7 +485,7 @@ public class ventanaMain extends JFrame {
                 if (resultado) {
                     long id = Long.parseLong(txtIDPaciente.getText());
                     Paciente paciente = crud.buscarPacientePorID(id);
-                    pacienteRespuesta(paciente, id);
+                    pacienteRespuesta(paciente, id, tipoUsuario);
                 } else {
                     JOptionPane.showMessageDialog(miPanel, "Error en la ID, ingrese solo numeros");
                     txtIDPaciente.requestFocus();
@@ -351,16 +502,106 @@ public class ventanaMain extends JFrame {
                     JOptionPane.showMessageDialog(miPanel, "Paciente ingresado exitosamente");
                     limpiarDatosPaciente();
                     btnAgregarPaciente.setEnabled(false);
+                    txtIDPaciente.setEnabled(true);
                 }
+            }
+        });
+
+        // Acciones de Cita
+
+        // Cada vez que se selecciona un Doctor, se muestra el nombre del mismo
+        cmbDoctores.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    long id = Long.parseLong(cmbDoctores.getSelectedItem().toString());
+                    DoctoresCRUD dCRUD = new DoctoresCRUD();
+                    Doctor doc = dCRUD.buscarDoctorPorID(id);
+                    if (doc != null) {
+                        txtDoctorSeleccionado.setText(doc.getApellido() + ", " + doc.getNombre());
+                    } else {
+                        txtDoctorSeleccionado.setText("");
+                    }
+                } catch (Exception ex) {
+                    txtDoctorSeleccionado.setText("");
+                }
+            }
+        });
+
+        // Cada vez que se selecciona un Paciente, se muestra el nombre del mismo
+        cmbPacientes.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    long id = Long.parseLong(cmbPacientes.getSelectedItem().toString());
+                    PacientesCRUD pCRUD = new PacientesCRUD();
+                    Paciente pac = pCRUD.buscarPacientePorID(id);
+                    if (pac != null) {
+                        txtPacienteSeleccionado.setText(pac.getApellido() + ", " + pac.getNombre());
+                    } else {
+                        txtPacienteSeleccionado.setText("");
+                    }
+                } catch (Exception ex) {
+                    txtPacienteSeleccionado.setText("");
+                }
+            }
+        });
+        btnAgregarCita.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CitasCRUD crud = new CitasCRUD();
+                Cita cita = obtenerCita();
+                if (cita != null) {
+                    crud.insertarCita(cita);
+                    JOptionPane.showMessageDialog(miPanel, "Cita médica agregada exitosamente");
+                    limpiarDatosCita();
+                }
+            }
+        });
+
+        // Creación de lista de citas médicas
+        tabbedPane1.addChangeListener(e -> {
+            if (tabbedPane1.getSelectedIndex() == 2) {
+                // Rellenamos los comboBox de Doctores y pacientes con datos si es que tenemos
+                rellenarDoctoresCmb();
+                rellenarPacientesCmb();
+                cmbDoctores.setSelectedItem(null);
+                cmbPacientes.setSelectedItem(null);
+
+                // Verificamos si tenemos un admin o no
+                if (tipoUsuario != "admin") {
+                    btnAgregarCita.setEnabled(false);
+                }
+            }
+            if (tabbedPane1.getSelectedIndex() == 3) {
+                createList();
             }
         });
     }
 
-    public static void main(String[] args) throws IOException {
-        ventanaMain v = new ventanaMain();
+    private void createList() {
+        CitasList<Cita> citasList = new CitasList<>();
+        citasList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        citasList.setToolTipText("");
+        sPanel.setViewportView(citasList);
+
+        CitasCRUD crud = new CitasCRUD();
+        ArrayList<Cita> citas = crud.leerArchivo();
+
+        if (citas != null) {
+            for (Cita c : citas) {
+                citasList.addItem(c);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        ventanaMain v = new ventanaMain(args[0]);
         v.setContentPane(v.miPanel);
         v.setSize(500, 500);
+        v.setTitle("AtomLife");
         v.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         v.setVisible(true);
+        v.setLocationRelativeTo(null);
     }
 }

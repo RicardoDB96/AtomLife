@@ -1,14 +1,15 @@
 package DAO;
 
-import entidades.Paciente;
+import entidades.Cita;
+import entidades.Doctor;
 
 import java.io.*;
 import java.util.ArrayList;
 
-public class PacientesCRUD {
+public class CitasCRUD {
 
-    // Ruta del archivo que contiene la información de los Pacientes
-    private final String filepath = "C:\\tmp\\Pacientes.txt";
+    // Ruta del archivo que contiene la información de las Citas
+    private final String filepath = "C:\\tmp\\Citas.txt";
 
     private void crearArchivo() {
         File archivo = new File(filepath);
@@ -16,7 +17,7 @@ public class PacientesCRUD {
             //Intentamos crear el archivo
             if (archivo.createNewFile()) {
                 // Se crea el archivo con el ArrayList dentro para evitar cualquier error
-                ArrayList<Paciente> lista = new ArrayList<Paciente>();
+                ArrayList<Cita> lista = new ArrayList<Cita>();
                 FileOutputStream escribir =
                         new FileOutputStream(filepath);
                 ObjectOutputStream miStream =
@@ -32,31 +33,31 @@ public class PacientesCRUD {
         }
     }
 
-    public ArrayList<Paciente> leerArchivo() {
+    public ArrayList<Cita> leerArchivo() {
         try {
             FileInputStream leer = new FileInputStream(filepath);
             System.out.println(leer.available());
             ObjectInputStream miStream = new ObjectInputStream(leer);
             Object o = miStream.readObject();
             miStream.close();
-            return (ArrayList<Paciente>) o;
+            return (ArrayList<Cita>) o;
         } catch (FileNotFoundException e) {
             System.out.println("Archivo no encontrado.");
         } catch (IOException e) {
             System.out.println("Error de E/S");
             System.out.println(e);
         } catch (ClassNotFoundException e) {
-            System.out.println("Error al leer lista de clase Pacientes");
+            System.out.println("Error al leer lista de clase Citas");
         }
         return null;
     }
 
-    private void escribirArchivo(ArrayList<Paciente> p) {
+    private void escribirArchivo(ArrayList<Cita> c) {
         // Escribimos la lista nueva sobre la lista anterior
         try {
             FileOutputStream escribir = new FileOutputStream(filepath);
             ObjectOutputStream miStream = new ObjectOutputStream(escribir);
-            miStream.writeObject(p);
+            miStream.writeObject(c);
             miStream.close();
         } catch (FileNotFoundException e) {
             System.out.println("Archivo no encontrado.");
@@ -67,48 +68,20 @@ public class PacientesCRUD {
     }
 
     /**
-     * Método para ingresar un Paciente al sistema
+     * Método para ingresar una Cita medica al sistema
      *
-     * @param p Paciente a ingresar al sistema
+     * @param c Cita medica a ingresar al sistema
      */
-    public void insertarPaciente(Paciente p) {
+    public void insertarCita(Cita c) {
         crearArchivo();
 
-        ArrayList<Paciente> pacientes = leerArchivo();
+        ArrayList<Cita> citas = leerArchivo();
 
-        if (pacientes != null) {
-            pacientes.add(p);
-            escribirArchivo(pacientes);
+        if (citas != null) {
+            citas.add(c);
+            escribirArchivo(citas);
         } else {
-            System.out.println("Error al intentar agregar un paciente");
+            System.out.println("Error al intentar agregar un doctor");
         }
-    }
-
-    /**
-     * Metodo para buscar un Paciente con un ID ingresada en el sistema
-     *
-     * @param ID del Paciente que estamos buscando
-     * @return Paciente si es que existe uno con la ID, por el contrario se retorna null
-     */
-    public Paciente buscarPacientePorID(long ID) {
-        crearArchivo();
-
-        // Obtener lista de pacientes desde Archivo
-        ArrayList<Paciente> pacientes = leerArchivo();
-
-        // Comprobamos si existe la lista
-        if (pacientes == null) {
-            return null;
-        }
-
-        // Comprobamos si la lista contiene el ID del paciente que buscamos
-        for (Paciente p : pacientes) {
-            if (p.getID() == ID) {
-                return p;
-            }
-        }
-
-        // No se encontro un paciente con la ID ingresada
-        return null;
     }
 }

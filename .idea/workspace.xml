@@ -4,10 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6a31e9d2-eb1f-4a1d-8272-5093409445c2" name="Changes" comment="Se hizo la primera versión del sistema">
+    <list default="true" id="6a31e9d2-eb1f-4a1d-8272-5093409445c2" name="Changes" comment="Simplicación de lectura y escritura en archivo">
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/AtomLife_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/KotlinJavaRuntime.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/CustomList/CitasList.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/CustomList/CitasListItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/DAO/CitasCRUD.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/entidades/Cita.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ventanaLogin.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ventanaLogin.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtomLife.iml" beforeDir="false" afterPath="$PROJECT_DIR$/AtomLife.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DAO/DoctoresCRUD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/DoctoresCRUD.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DAO/PacientesCRUD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/PacientesCRUD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ventanaMain.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/ventanaMain.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ventanaMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ventanaMain.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +29,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Kotlin Class" />
         <option value="Class" />
       </list>
     </option>
@@ -35,25 +48,24 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ToolWindowRun.ShowToolbar": "false",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/Ricardo/Downloads/demoProyecto/demoProyecto",
-    "onboarding.tips.debug.path": "C:/Users/Ricardo/Google Drive/5° Semestre/Computación en Java/AtomLife/src/Main.java"
+    "last_opened_file_path": "C:/Users/Ricardo/Downloads/demoProyecto",
+    "onboarding.tips.debug.path": "C:/Users/Ricardo/Google Drive/5° Semestre/Computación en Java/AtomLife/src/Main.java",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
   }
 }]]></component>
   <component name="RunManager">
-    <configuration name="ventanaMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="ventanaMain" />
+    <configuration name="AtomLife" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="ventanaLogin" />
       <module name="AtomLife" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.ventanaMain" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -72,11 +84,20 @@
       <option name="project" value="LOCAL" />
       <updated>1700962903086</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Simplicación de lectura y escritura en archivo">
+      <option name="closed" value="true" />
+      <created>1700973905881</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1700973905881</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Se hizo la primera versión del sistema" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se hizo la primera versión del sistema" />
+    <MESSAGE value="Simplicación de lectura y escritura en archivo" />
+    <option name="LAST_COMMIT_MESSAGE" value="Simplicación de lectura y escritura en archivo" />
   </component>
 </project>

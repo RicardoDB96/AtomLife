@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="AtomLife:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/AtomLife_jar</output-path>
+    <root id="archive" name="AtomLife.jar">
+      <element id="module-output" name="AtomLife" />
+    </root>
+  </artifact>
+</component>
